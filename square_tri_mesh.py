@@ -1,5 +1,6 @@
 
-from html.entities import name2codepoint
+import argparse
+
 import numpy as np
 
 def gmsh_header():
@@ -97,10 +98,17 @@ def make_mesh(l, x0, nx):
 
 
 if __name__ == '__main__':
-    nx = 2
-    l = 1
-    x0 = 0
-    msh = make_mesh(l, x0, nx)
+    parser = argparse.ArgumentParser(description='Make tri based gmsh of square')
+    parser.add_argument('-n', '--nx', dest='nx', type=int)
+    parser.add_argument('-l', default=1, dest='l', type=float)
+    parser.add_argument('-0', '--x0', default=0, dest='x0', type=float)
+
+    args = parser.parse_args()
+
+    nx = args.nx
+    l = args.l
+    x0 = args.x0
+    msh = make_mesh(l, x0, nx + 1)
 
     f = open(f'rht_square_nx{nx}.msh', 'w')
     f.write(msh)
