@@ -38,8 +38,8 @@ def gmsh_boundaries(nx, nele = 0):
             # WEST 1: i=0
             nele += 1
             n = [ind(0, i2+0, i1+0),
-                 ind(0, i2+0, i1+1),
-                 ind(0, i2+1, i1+0)]
+                 ind(0, i2+1, i1+0),
+                 ind(0, i2+0, i1+1)]
             # Id Type NumTags PhysGrp ElemGrp IndexList
             n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
             ele += f'{nele} 2 2 2 2 {n_str}\n'
@@ -47,8 +47,8 @@ def gmsh_boundaries(nx, nele = 0):
             # WEST 2: i=0
             nele += 1
             n = [ind(0, i2+0, i1+1),
-                 ind(0, i2+1, i1+1),
-                 ind(0, i2+1, i1+0)]
+                 ind(0, i2+1, i1+0),
+                 ind(0, i2+1, i1+1)]
             # Id Type NumTags PhysGrp ElemGrp IndexList
             n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
             ele += f'{nele} 2 2 2 2 {n_str}\n'
@@ -74,8 +74,8 @@ def gmsh_boundaries(nx, nele = 0):
             # SOUTH 1: j=0
             nele += 1
             n = [ind(i2+0, 0, i1+0),
-                 ind(i2+1, 0, i1+0),
-                 ind(i2+0, 0, i1+1)]
+                 ind(i2+0, 0, i1+1),
+                 ind(i2+1, 0, i1+0)]
             # Id Type NumTags PhysGrp ElemGrp IndexList
             n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
             ele += f'{nele} 2 2 3 3 {n_str}\n'
@@ -83,8 +83,8 @@ def gmsh_boundaries(nx, nele = 0):
             # SOUTH 2: j=0
             nele += 1
             n = [ind(i2+1, 0, i1+0),
-                 ind(i2+1, 0, i1+1),
-                 ind(i2+0, 0, i1+1)]
+                 ind(i2+0, 0, i1+1),
+                 ind(i2+1, 0, i1+1)]
             # Id Type NumTags PhysGrp ElemGrp IndexList
             n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
             ele += f'{nele} 2 2 3 3 {n_str}\n'
@@ -128,8 +128,8 @@ def gmsh_boundaries(nx, nele = 0):
             # TOP 1: k=nx-1
             nele += 1
             n = [ind(i2+0, i1+0, nx-1),
-                 ind(i2+1, i1+0, nx-1),
-                 ind(i2+0, i1+1, nx-1)]
+                 ind(i2+0, i1+1, nx-1),
+                 ind(i2+1, i1+0, nx-1)]
             # Id Type NumTags PhysGrp ElemGrp IndexList
             n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
             ele += f'{nele} 2 2 7 7 {n_str}\n'
@@ -137,8 +137,8 @@ def gmsh_boundaries(nx, nele = 0):
             # TOP 2: k=nx-1
             nele += 1
             n = [ind(i2+1, i1+0, nx-1),
-                 ind(i2+1, i1+1, nx-1),
-                 ind(i2+0, i1+1, nx-1)]
+                 ind(i2+0, i1+1, nx-1),
+                 ind(i2+1, i1+1, nx-1)]
             # Id Type NumTags PhysGrp ElemGrp IndexList
             n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
             ele += f'{nele} 2 2 7 7 {n_str}\n'
@@ -158,18 +158,18 @@ def gmsh_elements(nx):
             for i in range(nx - 1):
                 # Bottom 1
                 nele += 1
-                n = [ind(i+0, j+0, k),
-                     ind(i+1, j+0, k),
-                     ind(i+0, j+1, k),
+                n = [ind(i+0, j+0, k+0),
+                     ind(i+1, j+0, k+0),
+                     ind(i+0, j+1, k+0),
                      mind(i, j, k)]
                 n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
                 ele += f'{nele} 4 2 1 1 {n_str} \n'
 
                 # Bottom 2
                 nele += 1
-                n = [ind(i+1, j+0, k),
-                     ind(i+1, j+1, k),
-                     ind(i+0, j+1, k),
+                n = [ind(i+1, j+0, k+0),
+                     ind(i+1, j+1, k+0),
+                     ind(i+0, j+1, k+0),
                      mind(i, j, k)]
                 n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
                 ele += f'{nele} 4 2 1 1 {n_str} \n'
@@ -177,8 +177,8 @@ def gmsh_elements(nx):
                 # Top 1
                 nele += 1
                 n = [ind(i+0, j+0, k+1),
-                     ind(i+1, j+0, k+1),
                      ind(i+0, j+1, k+1),
+                     ind(i+1, j+0, k+1),
                      mind(i, j, k)]
                 n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
                 ele += f'{nele} 4 2 1 1 {n_str} \n'
@@ -186,8 +186,8 @@ def gmsh_elements(nx):
                 # Top 2
                 nele += 1
                 n = [ind(i+1, j+0, k+1),
-                     ind(i+1, j+1, k+1),
                      ind(i+0, j+1, k+1),
+                     ind(i+1, j+1, k+1),
                      mind(i, j, k)]
                 n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
                 ele += f'{nele} 4 2 1 1 {n_str} \n'
@@ -213,8 +213,8 @@ def gmsh_elements(nx):
                 # West 1
                 nele += 1
                 n = [ind(i+0, j+0, k+0),
-                     ind(i+0, j+0, k+1),
                      ind(i+0, j+1, k+0),
+                     ind(i+0, j+0, k+1),
                      mind(i, j, k)]
                 n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
                 ele += f'{nele} 4 2 1 1 {n_str} \n'
@@ -222,8 +222,8 @@ def gmsh_elements(nx):
                 # West 2
                 nele += 1
                 n = [ind(i+0, j+0, k+1),
-                     ind(i+0, j+1, k+1),
                      ind(i+0, j+1, k+0),
+                     ind(i+0, j+1, k+1),
                      mind(i, j, k)]
                 n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
                 ele += f'{nele} 4 2 1 1 {n_str} \n'
@@ -231,8 +231,8 @@ def gmsh_elements(nx):
                 # South 1
                 nele += 1
                 n = [ind(i+0, j+0, k+0),
-                     ind(i+1, j+0, k+0),
                      ind(i+0, j+0, k+1),
+                     ind(i+1, j+0, k+0),
                      mind(i, j, k)]
                 n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
                 ele += f'{nele} 4 2 1 1 {n_str} \n'
@@ -240,8 +240,8 @@ def gmsh_elements(nx):
                 # South 2
                 nele += 1
                 n = [ind(i+1, j+0, k+0),
-                     ind(i+1, j+0, k+1),
                      ind(i+0, j+0, k+1),
+                     ind(i+1, j+0, k+1),
                      mind(i, j, k)]
                 n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
                 ele += f'{nele} 4 2 1 1 {n_str} \n'
