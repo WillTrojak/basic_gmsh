@@ -121,9 +121,9 @@ def gmsh_elements(nx):
                 # Top
                 nele += 1
                 n = [ind(i+0, j+0, k+1),
-                     ind(i+1, j+0, k+1),
-                     ind(i+1, j+1, k+1),
                      ind(i+0, j+1, k+1),
+                     ind(i+1, j+1, k+1),
+                     ind(i+1, j+0, k+1),
                      mind(i, j, k)]
                 n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
                 ele += f'{nele} 7 2 1 1 {n_str} \n'
@@ -141,9 +141,9 @@ def gmsh_elements(nx):
                 # West
                 nele += 1
                 n = [ind(i+0, j+0, k+0),
-                     ind(i+0, j+0, k+1),
-                     ind(i+0, j+1, k+1),
                      ind(i+0, j+1, k+0),
+                     ind(i+0, j+1, k+1),
+                     ind(i+0, j+0, k+1),
                      mind(i, j, k)]
                 n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
                 ele += f'{nele} 7 2 1 1 {n_str} \n'
@@ -151,9 +151,9 @@ def gmsh_elements(nx):
                 # South
                 nele += 1
                 n = [ind(i+0, j+0, k+0),
-                     ind(i+1, j+0, k+0),
-                     ind(i+1, j+0, k+1),
                      ind(i+0, j+0, k+1),
+                     ind(i+1, j+0, k+1),
+                     ind(i+1, j+0, k+0),
                      mind(i, j, k)]
                 n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
                 ele += f'{nele} 7 2 1 1 {n_str} \n'
