@@ -1,4 +1,3 @@
-
 import argparse
 from math import pi
 
@@ -308,7 +307,5 @@ if __name__ == '__main__':
     x0 = args.x0
     msh = make_mesh(l, x0, nx + 1)
 
-    f = open(f'cube_nx{nx}.msh', 'w')
-    f.write(msh)
-
-
+    with open(f'cube_tet_nx{nx}.msh', 'w') as f:
+        f.write(msh)

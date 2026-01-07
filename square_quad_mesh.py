@@ -1,4 +1,3 @@
-
 import argparse
 
 import numpy as np
@@ -35,12 +34,12 @@ def gmsh_boundaries(nx, nele = 0):
         n1 = i*nx + 1
         n2 = (i + 1)*nx + 1
         ele += f'{nele} 1 2 2 1 {n1} {n2}\n'
-    
+
     # east
     for i in range(nx-1):
         nele += 1
         # elm-number elm-type reg-phys reg-elem number-of-nodes node-number-list
-        n1 = (i + 1)*nx 
+        n1 = (i + 1)*nx
         n2 = (i + 2)*nx
         ele += f'{nele} 1 2 4 3 {n1} {n2}\n'
 
@@ -59,7 +58,7 @@ def gmsh_boundaries(nx, nele = 0):
         n1 = (nx - 1)*nx + i + 1
         n2 = (nx - 1)*nx + i + 2
         ele += f'{nele} 1 2 5 4 {n1} {n2}\n'
-    
+
     return nele, ele
 
 def gmsh_elements(nx):
@@ -86,7 +85,7 @@ def make_mesh(l, x0, nx):
             X[j*nx+i,0] = rx
             X[j*nx+i,1] = ry
             X[j*nx+i,2] = 0.
-    
+
     header = gmsh_header()
     nodes = gmsh_nodes(X)
     ele = gmsh_elements(nx)
@@ -107,5 +106,5 @@ if __name__ == '__main__':
     x0 = args.x0
     msh = make_mesh(l, x0, nx + 1)
 
-    f = open(f'square_nx{nx}.msh', 'w')
-    f.write(msh)
+    with open(f'square_quad_nx{nx}.msh', 'w') as f:
+        f.write(msh)

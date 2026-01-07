@@ -1,4 +1,3 @@
-
 import argparse
 from math import pi
 
@@ -82,7 +81,7 @@ def gmsh_boundaries(nx, nele = 0):
             # Id Type NumTags PhysGrp ElemGrp IndexList
             n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
             ele += f'{nele} 3 2 7 7 {n_str}\n'
-    
+
     return nele, ele
 
 def gmsh_elements(nx):
@@ -95,7 +94,7 @@ def gmsh_elements(nx):
         for j in range(nx - 1):
             for i in range(nx - 1):
                 nele += 1
-                n = [ind(i+0, j+0, k+0), ind(i+1, j+0, k+0), 
+                n = [ind(i+0, j+0, k+0), ind(i+1, j+0, k+0),
                      ind(i+1, j+1, k+0), ind(i+0, j+1, k+0),
                      ind(i+0, j+0, k+1), ind(i+1, j+0, k+1),
                      ind(i+1, j+1, k+1), ind(i+0, j+1, k+1)]
@@ -114,7 +113,7 @@ def make_mesh(l, x0, nx):
             for rx in R:
                 X[i,:] = [rx, ry, rz]
                 i += 1
-    
+
     header = gmsh_header()
     nodes = gmsh_nodes(X)
     ele = gmsh_elements(nx)
@@ -137,5 +136,5 @@ if __name__ == '__main__':
     x0 = args.x0
     msh = make_mesh(l, x0, nx + 1)
 
-    f = open(f'cube_nx{nx}.msh', 'w')
-    f.write(msh)
+    with open(f'cube_hex_nx{nx}.msh', 'w') as f:
+        f.write(msh)
