@@ -4,7 +4,7 @@ from math import pi
 import numpy as np
 
 def gmsh_header():
-    header = '''
+    header = """
 $MeshFormat
 2.2 0 8
 $EndMeshFormat
@@ -18,18 +18,18 @@ $PhysicalNames
 2 6 "periodic_1_r"
 2 7 "periodic_2_r"
 $EndPhysicalNames
-'''
+"""
     return header
 
 def gmsh_nodes(X):
-    data = f'$Nodes\n{len(X)}\n'
-    for i,x in enumerate(X):
-        data += f'{i+1} ' + ' '.join(str(z) for z in x) + '\n'
-    data += '$EndNodes\n'
+    data = f"$Nodes\n{len(X)}\n"
+    for i, x in enumerate(X):
+        data += f"{i+1} " + " ".join(str(z) for z in x) + "\n"
+    data += "$EndNodes\n"
     return data
 
 def gmsh_boundaries(nx, nele = 0):
-    ele = ''
+    ele = ""
     ind = lambda i, j, k: grid_index(nx, nx, i, j, k)
 
     for i1 in range(nx-1):
@@ -39,32 +39,32 @@ def gmsh_boundaries(nx, nele = 0):
             n = [ind(0, i2+0, i1+0), ind(0, i2+1, i1+0),
                  ind(0, i2+1, i1+1), ind(0, i2+0, i1+1)]
             # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
-            ele += f'{nele} 3 2 2 2 {n_str}\n'
+            n_str = " ".join(f"{ni}" for ni in n)
+            ele += f"{nele} 3 2 2 2 {n_str}\n"
 
             # i=nx-1
             nele += 1
             n = [ind(nx-1, i2+0, i1+0), ind(nx-1, i2+1, i1+0),
                  ind(nx-1, i2+1, i1+1), ind(nx-1, i2+0, i1+1)]
             # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
-            ele += f'{nele} 3 2 5 5 {n_str}\n'
+            n_str = " ".join(f"{ni}" for ni in n)
+            ele += f"{nele} 3 2 5 5 {n_str}\n"
 
             # j=0
             nele += 1
             n = [ind(i2+0, 0, i1+0), ind(i2+1, 0, i1+0),
                  ind(i2+1, 0, i1+1), ind(i2+0, 0, i1+1)]
             # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
-            ele += f'{nele} 3 2 3 3 {n_str}\n'
+            n_str = " ".join(f"{ni}" for ni in n)
+            ele += f"{nele} 3 2 3 3 {n_str}\n"
 
             # j=nx-1
             nele += 1
             n = [ind(i2+0, nx-1, i1+0), ind(i2+1, nx-1, i1+0),
                  ind(i2+1, nx-1, i1+1), ind(i2+0, nx-1, i1+1)]
             # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
-            ele += f'{nele} 3 2 6 6 {n_str}\n'
+            n_str = " ".join(f"{ni}" for ni in n)
+            ele += f"{nele} 3 2 6 6 {n_str}\n"
 
             # k=0
             nele += 1
@@ -72,16 +72,16 @@ def gmsh_boundaries(nx, nele = 0):
                  ind(i2+0, i1+1, 0),
                  ind(i2+1, i1+0, 0)]
             # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
-            ele += f'{nele} 2 2 4 4 {n_str}\n'
+            n_str = " ".join(f"{ni}" for ni in n)
+            ele += f"{nele} 2 2 4 4 {n_str}\n"
 
             nele += 1
             n = [ind(i2+1, i1+1, 0),
                  ind(i2+0, i1+1, 0),
                  ind(i2+1, i1+0, 0)]
             # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
-            ele += f'{nele} 2 2 4 4 {n_str}\n'
+            n_str = " ".join(f"{ni}" for ni in n)
+            ele += f"{nele} 2 2 4 4 {n_str}\n"
 
             # k=nx-1
             nele += 1
@@ -89,16 +89,16 @@ def gmsh_boundaries(nx, nele = 0):
                  ind(i2+0, i1+1, nx-1),
                  ind(i2+1, i1+0, nx-1)]
             # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
-            ele += f'{nele} 2 2 7 7 {n_str}\n'
+            n_str = " ".join(f"{ni}" for ni in n)
+            ele += f"{nele} 2 2 7 7 {n_str}\n"
 
             nele += 1
             n = [ind(i2+1, i1+1, nx-1),
                  ind(i2+0, i1+1, nx-1),
                  ind(i2+1, i1+0, nx-1)]
             # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
-            ele += f'{nele} 2 2 7 7 {n_str}\n'
+            n_str = " ".join(f"{ni}" for ni in n)
+            ele += f"{nele} 2 2 7 7 {n_str}\n"
 
     return nele, ele
 
@@ -113,13 +113,13 @@ def gmsh_elements(nx):
             for i in range(nx - 1):
                 nele += 1
                 n = [ind(i+0, j+0, k+0),
-                     ind(i+0, j+1, k+0),
                      ind(i+1, j+0, k+0),
+                     ind(i+0, j+1, k+0),
                      ind(i+0, j+0, k+1),
-                     ind(i+0, j+1, k+1),
-                     ind(i+1, j+0, k+1)]
-                n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
-                ele += f'{nele} 6 2 1 1 {n_str} \n'
+                     ind(i+1, j+0, k+1),
+                     ind(i+0, j+1, k+1)]
+                n_str = " ".join(f"{ni}" for ni in n)
+                ele += f"{nele} 6 2 1 1 {n_str} \n"
                 nele += 1
                 n = [ind(i+1, j+1, k+0),
                      ind(i+0, j+1, k+0),
@@ -127,10 +127,10 @@ def gmsh_elements(nx):
                      ind(i+1, j+1, k+1),
                      ind(i+0, j+1, k+1),
                      ind(i+1, j+0, k+1)]
-                n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
-                ele += f'{nele} 6 2 1 1 {n_str} \n'
+                n_str = " ".join(f"{ni}" for ni in n)
+                ele += f"{nele} 6 2 1 1 {n_str} \n"
 
-    return f'$Elements\n{nele}\n' + ele + '$EndElements\n'
+    return f"$Elements\n{nele}\n" + ele + "$EndElements\n"
 
 def make_mesh(l, x0, nx):
     R = np.linspace(x0, x0 + l, nx)
@@ -152,11 +152,11 @@ def make_mesh(l, x0, nx):
 def grid_index(nx, ny, i, j, k):
     return k*nx*ny + j*nx + i + 1
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Make prism based gmsh of cube')
-    parser.add_argument('-n', '--nx', dest='nx', type=int)
-    parser.add_argument('-l', default=1, dest='l', type=float)
-    parser.add_argument('-0', '--x0', default=0, dest='x0', type=float)
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Make prism based gmsh of cube")
+    parser.add_argument("-n", "--nx", dest="nx",  required=True, type=int)
+    parser.add_argument("-l", default=1, dest="l", type=float)
+    parser.add_argument("-0", "--x0", default=0, dest="x0", type=float)
 
     args = parser.parse_args()
 
@@ -165,5 +165,5 @@ if __name__ == '__main__':
     x0 = args.x0
     msh = make_mesh(l, x0, nx + 1)
 
-    with open(f'cube_pri_nx{nx}.msh', 'w') as f:
+    with open(f"cube_pri_nx{nx}.msh", "w") as f:
         f.write(msh)
