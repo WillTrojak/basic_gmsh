@@ -1,2 +1,4 @@
 *.msh
+*.geo
+*~
 *.pyfrm
