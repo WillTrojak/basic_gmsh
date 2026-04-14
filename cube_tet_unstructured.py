@@ -99,4 +99,4 @@ if __name__ == "__main__":
 
     if not args.quiet:
         print(f"Wrote: {filename}\n"
-              "Now run:\ngmsh -3 -optimize -format msh22 -order 0 {filename}")
+              f"Now run:\ngmsh -3 -optimize -format msh22 -order 0 {filename}")
