@@ -22,14 +22,14 @@ $EndPhysicalNames
     return header
 
 def gmsh_nodes(X):
-    data = f"$Nodes\n{len(X)}\n"
+    lines = [f"$Nodes", f"{len(X)}"]
     for i,x in enumerate(X):
-        data += f"{i+1} " + " ".join(str(z) for z in x) + "\n"
-    data += "$EndNodes\n"
-    return data
+        lines.append(f"{i+1} " + " ".join(str(z) for z in x))
+    lines.append("$EndNodes")
+    return "\n".join(lines) + "\n"
 
 def gmsh_boundaries(nx, nele = 0):
-    ele = ""
+    lines = []
 
     ind = lambda i, j, k: grid_i(nx, nx, i, j, k)
     for i1 in range(nx-1):
@@ -39,120 +39,107 @@ def gmsh_boundaries(nx, nele = 0):
             n = [ind(0, i2+0, i1+0),
                  ind(0, i2+1, i1+0),
                  ind(0, i2+0, i1+1)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = " ".join("{ni}".format(ni=ni) for ni in n)
-            ele += f"{nele} 2 2 2 2 {n_str}\n"
+            n_str = " ".join(f"{ni}" for ni in n)
+            lines.append(f"{nele} 2 2 2 2 {n_str}")
 
             # WEST 2: i=0
             nele += 1
             n = [ind(0, i2+0, i1+1),
                  ind(0, i2+1, i1+0),
                  ind(0, i2+1, i1+1)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = " ".join("{ni}".format(ni=ni) for ni in n)
-            ele += f"{nele} 2 2 2 2 {n_str}\n"
+            n_str = " ".join(f"{ni}" for ni in n)
+            lines.append(f"{nele} 2 2 2 2 {n_str}")
 
             # EAST 1: i=nx-1
             nele += 1
             n = [ind(nx-1, i2+0, i1+0),
                  ind(nx-1, i2+0, i1+1),
                  ind(nx-1, i2+1, i1+0)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = " ".join("{ni}".format(ni=ni) for ni in n)
-            ele += f"{nele} 2 2 5 5 {n_str}\n"
+            n_str = " ".join(f"{ni}" for ni in n)
+            lines.append(f"{nele} 2 2 5 5 {n_str}")
 
             # EAST 2: i=nx-1
             nele += 1
             n = [ind(nx-1, i2+0, i1+1),
                  ind(nx-1, i2+1, i1+1),
                  ind(nx-1, i2+1, i1+0)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = " ".join("{ni}".format(ni=ni) for ni in n)
-            ele += f"{nele} 2 2 5 5 {n_str}\n"
+            n_str = " ".join(f"{ni}" for ni in n)
+            lines.append(f"{nele} 2 2 5 5 {n_str}")
 
             # SOUTH 1: j=0
             nele += 1
             n = [ind(i2+0, 0, i1+0),
                  ind(i2+0, 0, i1+1),
                  ind(i2+1, 0, i1+0)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = " ".join("{ni}".format(ni=ni) for ni in n)
-            ele += f"{nele} 2 2 3 3 {n_str}\n"
+            n_str = " ".join(f"{ni}" for ni in n)
+            lines.append(f"{nele} 2 2 3 3 {n_str}")
 
             # SOUTH 2: j=0
             nele += 1
             n = [ind(i2+1, 0, i1+0),
                  ind(i2+0, 0, i1+1),
                  ind(i2+1, 0, i1+1)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = " ".join("{ni}".format(ni=ni) for ni in n)
-            ele += f"{nele} 2 2 3 3 {n_str}\n"
+            n_str = " ".join(f"{ni}" for ni in n)
+            lines.append(f"{nele} 2 2 3 3 {n_str}")
 
             # NORTH 1: j=nx-1
             nele += 1
             n = [ind(i2+0, nx-1, i1+0),
                  ind(i2+1, nx-1, i1+0),
                  ind(i2+0, nx-1, i1+1)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = " ".join("{ni}".format(ni=ni) for ni in n)
-            ele += f"{nele} 2 2 6 6 {n_str}\n"
+            n_str = " ".join(f"{ni}" for ni in n)
+            lines.append(f"{nele} 2 2 6 6 {n_str}")
 
             # NORTH 2: j=nx-1
             nele += 1
             n = [ind(i2+1, nx-1, i1+0),
                  ind(i2+1, nx-1, i1+1),
                  ind(i2+0, nx-1, i1+1)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = " ".join("{ni}".format(ni=ni) for ni in n)
-            ele += f"{nele} 2 2 6 6 {n_str}\n"
+            n_str = " ".join(f"{ni}" for ni in n)
+            lines.append(f"{nele} 2 2 6 6 {n_str}")
 
             # BOTTOM 1: k=0
             nele += 1
             n = [ind(i2+0, i1+0, 0),
                  ind(i2+1, i1+0, 0),
                  ind(i2+0, i1+1, 0)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = " ".join("{ni}".format(ni=ni) for ni in n)
-            ele += f"{nele} 2 2 4 4 {n_str}\n"
+            n_str = " ".join(f"{ni}" for ni in n)
+            lines.append(f"{nele} 2 2 4 4 {n_str}")
 
             # BOTTOM 2: k=0
             nele += 1
             n = [ind(i2+1, i1+0, 0),
                  ind(i2+1, i1+1, 0),
                  ind(i2+0, i1+1, 0)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = " ".join("{ni}".format(ni=ni) for ni in n)
-            ele += f"{nele} 2 2 4 4 {n_str}\n"
+            n_str = " ".join(f"{ni}" for ni in n)
+            lines.append(f"{nele} 2 2 4 4 {n_str}")
 
             # TOP 1: k=nx-1
             nele += 1
             n = [ind(i2+0, i1+0, nx-1),
                  ind(i2+0, i1+1, nx-1),
                  ind(i2+1, i1+0, nx-1)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = " ".join("{ni}".format(ni=ni) for ni in n)
-            ele += f"{nele} 2 2 7 7 {n_str}\n"
+            n_str = " ".join(f"{ni}" for ni in n)
+            lines.append(f"{nele} 2 2 7 7 {n_str}")
 
             # TOP 2: k=nx-1
             nele += 1
             n = [ind(i2+1, i1+0, nx-1),
                  ind(i2+0, i1+1, nx-1),
                  ind(i2+1, i1+1, nx-1)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = " ".join("{ni}".format(ni=ni) for ni in n)
-            ele += f"{nele} 2 2 7 7 {n_str}\n"
+            n_str = " ".join(f"{ni}" for ni in n)
+            lines.append(f"{nele} 2 2 7 7 {n_str}")
 
-    return nele, ele
+    return nele, lines
 
 def gmsh_elements(nx):
-    nele, ele = gmsh_boundaries(nx)
+    nele, lines = gmsh_boundaries(nx)
     moff = nx*nx*nx
 
     ind = lambda i, j, k: grid_i(nx, nx, i, j, k)
     mind = lambda i, j, k: moff + grid_i(nx-1, nx-1, i, j, k)
 
     # elm-number elm-type number-of-tags < tag > … node-number-list
-    eles = {}
     for k in range(nx - 1):
         for j in range(nx - 1):
             for i in range(nx - 1):
@@ -160,57 +147,77 @@ def gmsh_elements(nx):
 
                 # Bottom 1
                 nele += 1
-                eles[nele] = [ind(i+0, j+0, k+0), ind(i+1, j+0, k+0), ind(i+0, j+1, k+0), midx]
+                n = [ind(i+0, j+0, k+0), ind(i+1, j+0, k+0), ind(i+0, j+1, k+0), midx]
+                n_str = " ".join(f"{ni}" for ni in n)
+                lines.append(f"{nele} 4 2 1 1 {n_str}")
 
                 # Bottom 2
                 nele += 1
-                eles[nele] = [ind(i+1, j+0, k+0), ind(i+1, j+1, k+0), ind(i+0, j+1, k+0), midx]
+                n = [ind(i+1, j+0, k+0), ind(i+1, j+1, k+0), ind(i+0, j+1, k+0), midx]
+                n_str = " ".join(f"{ni}" for ni in n)
+                lines.append(f"{nele} 4 2 1 1 {n_str}")
 
                 # Top 1
                 nele += 1
-                eles[nele] = [ind(i+0, j+0, k+1), ind(i+0, j+1, k+1), ind(i+1, j+0, k+1), midx]
+                n = [ind(i+0, j+0, k+1), ind(i+0, j+1, k+1), ind(i+1, j+0, k+1), midx]
+                n_str = " ".join(f"{ni}" for ni in n)
+                lines.append(f"{nele} 4 2 1 1 {n_str}")
 
                 # Top 2
                 nele += 1
-                eles[nele] = [ind(i+1, j+0, k+1), ind(i+0, j+1, k+1), ind(i+1, j+1, k+1), midx]
+                n = [ind(i+1, j+0, k+1), ind(i+0, j+1, k+1), ind(i+1, j+1, k+1), midx]
+                n_str = " ".join(f"{ni}" for ni in n)
+                lines.append(f"{nele} 4 2 1 1 {n_str}")
 
                 # East 1
                 nele += 1
-                eles[nele] = [ind(i+1, j+0, k+0), ind(i+1, j+0, k+1), ind(i+1, j+1, k+0), midx]
+                n = [ind(i+1, j+0, k+0), ind(i+1, j+0, k+1), ind(i+1, j+1, k+0), midx]
+                n_str = " ".join(f"{ni}" for ni in n)
+                lines.append(f"{nele} 4 2 1 1 {n_str}")
 
                 # East 2
                 nele += 1
-                eles[nele] = [ind(i+1, j+0, k+1), ind(i+1, j+1, k+1), ind(i+1, j+1, k+0), midx]
+                n = [ind(i+1, j+0, k+1), ind(i+1, j+1, k+1), ind(i+1, j+1, k+0), midx]
+                n_str = " ".join(f"{ni}" for ni in n)
+                lines.append(f"{nele} 4 2 1 1 {n_str}")
 
                 # West 1
                 nele += 1
-                eles[nele] = [ind(i+0, j+0, k+0), ind(i+0, j+1, k+0), ind(i+0, j+0, k+1), midx]
+                n = [ind(i+0, j+0, k+0), ind(i+0, j+1, k+0), ind(i+0, j+0, k+1), midx]
+                n_str = " ".join(f"{ni}" for ni in n)
+                lines.append(f"{nele} 4 2 1 1 {n_str}")
 
                 # West 2
                 nele += 1
-                eles[nele] = [ind(i+0, j+0, k+1), ind(i+0, j+1, k+0), ind(i+0, j+1, k+1), midx]
+                n = [ind(i+0, j+0, k+1), ind(i+0, j+1, k+0), ind(i+0, j+1, k+1), midx]
+                n_str = " ".join(f"{ni}" for ni in n)
+                lines.append(f"{nele} 4 2 1 1 {n_str}")
 
                 # South 1
                 nele += 1
-                eles[nele] = [ind(i+0, j+0, k+0), ind(i+0, j+0, k+1), ind(i+1, j+0, k+0), midx]
+                n = [ind(i+0, j+0, k+0), ind(i+0, j+0, k+1), ind(i+1, j+0, k+0), midx]
+                n_str = " ".join(f"{ni}" for ni in n)
+                lines.append(f"{nele} 4 2 1 1 {n_str}")
 
                 # South 2
                 nele += 1
-                eles[nele] = [ind(i+1, j+0, k+0), ind(i+0, j+0, k+1), ind(i+1, j+0, k+1), midx]
+                n = [ind(i+1, j+0, k+0), ind(i+0, j+0, k+1), ind(i+1, j+0, k+1), midx]
+                n_str = " ".join(f"{ni}" for ni in n)
+                lines.append(f"{nele} 4 2 1 1 {n_str}")
 
                 # North 1
                 nele += 1
-                eles[nele] = [ind(i+0, j+1, k+0), ind(i+1, j+1, k+0), ind(i+0, j+1, k+1), midx]
+                n = [ind(i+0, j+1, k+0), ind(i+1, j+1, k+0), ind(i+0, j+1, k+1), midx]
+                n_str = " ".join(f"{ni}" for ni in n)
+                lines.append(f"{nele} 4 2 1 1 {n_str}")
 
                 # North 2
                 nele += 1
-                eles[nele] = [ind(i+1, j+1, k+0), ind(i+1, j+1, k+1), ind(i+0, j+1, k+1), midx]
+                n = [ind(i+1, j+1, k+0), ind(i+1, j+1, k+1), ind(i+0, j+1, k+1), midx]
+                n_str = " ".join(f"{ni}" for ni in n)
+                lines.append(f"{nele} 4 2 1 1 {n_str}")
 
-    for k, v in eles.items():
-        n_str = " ".join(f"{ni}" for ni in v)
-        ele = f"{ele}{k} 4 2 1 1 {n_str}\n"
-
-    return f"$Elements\n{nele}\n{ele}$EndElements\n"
+    return f"$Elements\n{nele}\n" + "\n".join(lines) + "\n$EndElements\n"
 
 def grid_i(nx, ny, i, j, k):
     return k*nx*ny + j*nx + i + 1

@@ -22,14 +22,14 @@ $EndPhysicalNames
     return header
 
 def gmsh_nodes(X):
-    data = f'$Nodes\n{len(X)}\n'
+    lines = ['$Nodes', f'{len(X)}']
     for i,x in enumerate(X):
-        data += f'{i+1} ' + ' '.join(str(z) for z in x) + '\n'
-    data += '$EndNodes\n'
-    return data
+        lines.append(f'{i+1} ' + ' '.join(str(z) for z in x))
+    lines.append('$EndNodes')
+    return '\n'.join(lines) + '\n'
 
 def gmsh_boundaries(nx, nele = 0):
-    ele = ''
+    lines = []
     ind = lambda i, j, k: grid_index(nx, nx, i, j, k)
 
     for i1 in range(nx-1):
@@ -38,54 +38,48 @@ def gmsh_boundaries(nx, nele = 0):
             nele += 1
             n = [ind(0, i2, i1), ind(0, i2+1, i1),
                  ind(0, i2+1, i1+1), ind(0, i2, i1+1)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
-            ele += f'{nele} 3 2 2 2 {n_str}\n'
+            n_str = ' '.join(f'{ni}' for ni in n)
+            lines.append(f'{nele} 3 2 2 2 {n_str}')
 
             # i=nx-1
             nele += 1
             n = [ind(nx-1, i2, i1), ind(nx-1, i2+1, i1),
                  ind(nx-1, i2+1, i1+1), ind(nx-1, i2, i1+1)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
-            ele += f'{nele} 3 2 5 5 {n_str}\n'
+            n_str = ' '.join(f'{ni}' for ni in n)
+            lines.append(f'{nele} 3 2 5 5 {n_str}')
 
             # j=0
             nele += 1
             n = [ind(i2, 0, i1), ind(i2+1, 0, i1),
                  ind(i2+1, 0, i1+1), ind(i2, 0, i1+1)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
-            ele += f'{nele} 3 2 3 3 {n_str}\n'
+            n_str = ' '.join(f'{ni}' for ni in n)
+            lines.append(f'{nele} 3 2 3 3 {n_str}')
 
             # j=nx-1
             nele += 1
             n = [ind(i2, nx-1, i1), ind(i2+1, nx-1, i1),
                  ind(i2+1, nx-1, i1+1), ind(i2, nx-1, i1+1)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
-            ele += f'{nele} 3 2 6 6 {n_str}\n'
+            n_str = ' '.join(f'{ni}' for ni in n)
+            lines.append(f'{nele} 3 2 6 6 {n_str}')
 
             # k=0
             nele += 1
             n = [ind(i2, i1, 0), ind(i2, i1+1, 0),
                  ind(i2+1, i1+1, 0), ind(i2+1, i1, 0)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
-            ele += f'{nele} 3 2 4 4 {n_str}\n'
+            n_str = ' '.join(f'{ni}' for ni in n)
+            lines.append(f'{nele} 3 2 4 4 {n_str}')
 
             # k=nx-1
             nele += 1
             n = [ind(i2, i1, nx-1), ind(i2, i1+1, nx-1),
                  ind(i2+1, i1+1, nx-1), ind(i2+1, i1, nx-1)]
-            # Id Type NumTags PhysGrp ElemGrp IndexList
-            n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
-            ele += f'{nele} 3 2 7 7 {n_str}\n'
+            n_str = ' '.join(f'{ni}' for ni in n)
+            lines.append(f'{nele} 3 2 7 7 {n_str}')
 
-    return nele, ele
+    return nele, lines
 
 def gmsh_elements(nx):
-    nele, ele = gmsh_boundaries(nx)
+    nele, lines = gmsh_boundaries(nx)
 
     ind = lambda i, j, k: grid_index(nx, nx, i, j, k)
 
@@ -98,10 +92,10 @@ def gmsh_elements(nx):
                      ind(i+1, j+1, k+0), ind(i+0, j+1, k+0),
                      ind(i+0, j+0, k+1), ind(i+1, j+0, k+1),
                      ind(i+1, j+1, k+1), ind(i+0, j+1, k+1)]
-                n_str = ' '.join('{ni}'.format(ni=ni) for ni in n)
-                ele += f'{nele} 5 2 1 1 {n_str} \n'
+                n_str = ' '.join(f'{ni}' for ni in n)
+                lines.append(f'{nele} 5 2 1 1 {n_str} ')
 
-    return f'$Elements\n{nele}\n' + ele + '$EndElements\n'
+    return f'$Elements\n{nele}\n' + '\n'.join(lines) + '\n$EndElements\n'
 
 def make_mesh(l, x0, nx):
     R = np.linspace(x0, x0 + l, nx)

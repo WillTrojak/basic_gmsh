@@ -19,50 +19,46 @@ $EndPhysicalNames
     return header
 
 def gmsh_nodes(X):
-    data = f'$Nodes\n{len(X)}\n'
+    lines = ['$Nodes', f'{len(X)}']
     for i,x in enumerate(X):
-        data += f'{i+1} ' + ' '.join(str(z) for z in x) + '\n'
-    data += '$EndNodes\n'
-    return data
+        lines.append(f'{i+1} ' + ' '.join(str(z) for z in x))
+    lines.append('$EndNodes')
+    return '\n'.join(lines) + '\n'
 
 def gmsh_boundaries(nx, nele = 0):
-    ele = ''
+    lines = []
     # west
     for i in range(nx-1):
         nele += 1
-        # elm-number elm-type reg-phys reg-elem number-of-nodes node-number-list
         n1 = i*nx + 1
         n2 = (i + 1)*nx + 1
-        ele += f'{nele} 1 2 2 1 {n1} {n2}\n'
+        lines.append(f'{nele} 1 2 2 1 {n1} {n2}')
 
     # east
     for i in range(nx-1):
         nele += 1
-        # elm-number elm-type reg-phys reg-elem number-of-nodes node-number-list
         n1 = (i + 1)*nx
         n2 = (i + 2)*nx
-        ele += f'{nele} 1 2 4 3 {n1} {n2}\n'
+        lines.append(f'{nele} 1 2 4 3 {n1} {n2}')
 
     # south
     for i in range(nx-1):
         nele += 1
-        # elm-number elm-type reg-phys reg-elem number-of-nodes node-number-list
         n1 = i + 1
         n2 = i + 2
-        ele += f'{nele} 1 2 3 2 {n1} {n2}\n'
+        lines.append(f'{nele} 1 2 3 2 {n1} {n2}')
 
     # north
     for i in range(nx-1):
         nele += 1
-        # elm-number elm-type reg-phys reg-elem number-of-nodes node-number-list
         n1 = (nx - 1)*nx + i + 1
         n2 = (nx - 1)*nx + i + 2
-        ele += f'{nele} 1 2 5 4 {n1} {n2}\n'
+        lines.append(f'{nele} 1 2 5 4 {n1} {n2}')
 
-    return nele, ele
+    return nele, lines
 
 def gmsh_elements(nx):
-    nele, ele = gmsh_boundaries(nx)
+    nele, lines = gmsh_boundaries(nx)
 
     # elm-number elm-type number-of-tags < tag > … node-number-list
     for j in range(nx - 1):
@@ -72,9 +68,9 @@ def gmsh_elements(nx):
             n2 = j*nx + i + 2
             n3 = (j + 1)*nx + i + 2
             n4 = (j + 1)*nx + i + 1
-            ele += f'{nele} 3 2 1 4 {n1} {n2} {n3} {n4}\n'
+            lines.append(f'{nele} 3 2 1 4 {n1} {n2} {n3} {n4}')
 
-    return f'$Elements\n{nele}\n' + ele + '$EndElements\n'
+    return f'$Elements\n{nele}\n' + '\n'.join(lines) + '\n$EndElements\n'
 
 def make_mesh(l, x0, nx):
     R = np.linspace(x0, x0 + l, nx)
